@@ -1,28 +1,37 @@
 #!/usr/bin/python
 
 #desmet_t@hotmail.com
-#12/12/2018
+#10/10/2018
 
 #SERVICE PROVIDER
 
 #SimpleXMLRPCServer is the library to create an XML-RPC server
 
-
-from xmlrpc.server import SimpleXMLRPCServer
+from xmlrpc.server import SimpleXMLRPCServer, SimpleXMLRPCRequestHandler
 import logging
 import random
 
+class RequestHandler(SimpleXMLRPCRequestHandler):
+	rpc_paths = ('/RPC2',)
+
+	def do_OPTIONS(self):
+        	self.send_response(200)
+        	self.end_headers()
+
+	# Add these headers to all responses
+	def end_headers(self):
+        	self.send_header("Access-Control-Allow-Headers", 
+                         "Origin, X-Requested-With, Content-Type, Accept")
+        	self.send_header("Access-Control-Allow-Origin", "*")
+        	SimpleXMLRPCRequestHandler.end_headers(self)
 
 #Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
-server = SimpleXMLRPCServer (('localhost', 9000),logRequests=True)
+server = SimpleXMLRPCServer (('localhost', 9000),logRequests=True,requestHandler=RequestHandler)
 
 #register XML-RPC introspextion functions such as system.listMethods()
 server.register_introspection_functions()
-
-#Multicall provides a way to encapsulate multiple calls to a remote server into a single request
-server.register_multicall_functions()
 
 #Expose functions
 

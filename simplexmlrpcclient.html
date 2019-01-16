@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--
+desmet_t@hotmail.com
+27/12/2018
+-->
+<html>
+<head>
+<script src="mimic/mimic.js" language="javascript"></script>
+<link rel="shortcut icon" type="image/png" href="https://img.icons8.com/color/48/000000/rainbow.png"/>
+</head>
+<body>
+<h3>Tom's Weather Reporter:</h3>
+<p id="weatherReportParagraph"></p>
+<script language="javascript">
+
+
+// We create XMLRpcRequest to our server en add the method (get_weather_station_location) we want to call up.
+var get_weather_station_location = new XmlRpcRequest("http://localhost:9000/RPC2", "get_weather_station_location");
+
+// Send the XMLRpcRequest to server and retrieve the answer in variabale (answer_location).
+var answer_location = get_weather_station_location.send();
+
+// Parse the variable (answer_location) into XML format and put this is another variable (html_location).
+var html_location = answer_location.parseXML();
+
+var get_weather_station_coordinates = new XmlRpcRequest("http://localhost:9000/RPC2", "get_weather_station_coordinates");
+var answer_coordinates = get_weather_station_coordinates.send();
+var html_coordinates = answer_coordinates.parseXML();
+
+var get_temperature = new XmlRpcRequest("http://localhost:9000/RPC2", "get_temperature");
+var answer_temperature = get_temperature.send();
+var html_temperature = answer_temperature.parseXML();
+
+var get_wind_direction = new XmlRpcRequest("http://localhost:9000/RPC2", "get_wind_direction");
+var answer_wind_direction = get_wind_direction.send();
+var html_wind_direction = answer_wind_direction.parseXML();
+
+var get_wind_speed = new XmlRpcRequest("http://localhost:9000/RPC2", "get_wind_speed");
+var answer_wind_speed = get_wind_speed.send();
+var html_wind_speed = answer_wind_speed.parseXML();
+
+var weatherReport="";
+weatherReport += "<ul>";
+weatherReport += "<li>"+ html_location +"</li>" ;
+weatherReport += "<li>"+ html_coordinates +"</li>" ;
+weatherReport += "<li>"+ html_temperature +"</li>" ;
+weatherReport += "<li>"+ html_wind_direction +"</li>" ;
+weatherReport += "<li>"+ html_wind_speed +"</li>" ;
+weatherReport += "</ul>" ;
+
+document.getElementById("weatherReportParagraph").innerHTML=weatherReport;
+</script>
+</body>
+</html>
