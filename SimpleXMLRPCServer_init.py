@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 #desmet_t@hotmail.com
-#10/10/2018
+#12/12/2018
 
 #SERVICE PROVIDER
 
@@ -12,28 +12,17 @@ from xmlrpc.server import SimpleXMLRPCServer
 import logging
 import random
 
-from xmlrpc.server import SimpleXMLRPCRequestHandler
-class RequestHandler(SimpleXMLRPCRequestHandler):
-    rpc_paths = ('/RPC2',)
-
-def do_OPTIONS(self):
-    if self.path in ('*', '/list'):
-        self.send_response(200)
-        self.send_header('Allow', 'GET, OPTIONS')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Headers', 'X-Request, X-Requested-With')
-    else:
-        self.send_response(404)
-    self.send_header('Content-Length', '0')
-    self.end_headers()
 
 #Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
-server = SimpleXMLRPCServer (('localhost', 9000),logRequests=True, requestHandler=RequestHandler)
+server = SimpleXMLRPCServer (('localhost', 9000),logRequests=True)
 
 #register XML-RPC introspextion functions such as system.listMethods()
 server.register_introspection_functions()
+
+#Multicall provides a way to encapsulate multiple calls to a remote server into a single request
+server.register_multicall_functions()
 
 #Expose functions
 
